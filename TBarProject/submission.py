@@ -15,29 +15,21 @@ def scaleImage(*args):
     global scaleType
 
     # Get the scale factor from the trackbar
-    scaleFactor = 1 + args[0] / 100.0
+    scaleFactor = 1 + args[0] / 100.0 if scaleType == 0 else 1 - args[0] / 100.0
 
-    # Perform check if scaleFactor is zero
-    if scaleFactor == 0:
-        scaleFactor = 1
+    # Perform check if scaleFactor is zero or negative
+    if scaleFactor <= 0:
+        scaleFactor = 0.01
 
     # Resize the image
     scaledImage = cv2.resize(im, None, fx=scaleFactor, fy=scaleFactor, interpolation=cv2.INTER_LINEAR)
     cv2.imshow(windowName, scaledImage)
 
-
 # Callback functions
 def scaleTypeImage(*args):
     global scaleType
-    global scaleFactor
     scaleType = args[0]
-    scaleFactor = 1 + scaleFactor / 100.0
-    if scaleFactor == 0:
-        scaleFactor = 1
-    scaledImage = cv2.resize(im, None, fx=scaleFactor, fy=scaleFactor, interpolation=cv2.INTER_LINEAR)
-    cv2.imshow(windowName, scaledImage)
-
-
+    scaleImage(cv2.getTrackbarPos(trackbarValue, windowName))
 
 # load an image
 im = cv2.imread("./data/truth.jpg")
